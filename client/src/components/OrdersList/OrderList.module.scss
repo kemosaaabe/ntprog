@@ -1,0 +1,33 @@
+.ordersList {
+    width: 70%;
+    margin: 50px auto;
+    display: grid;
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+}
+
+table {
+    border-collapse: collapse;
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 10px 15px;
+    }
+
+    td {
+        text-align: center;
+        min-width: 50px;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @media (min-width: 1920px) {
+        width: 1200px;
+        margin: 0 auto;
+    }
+}
