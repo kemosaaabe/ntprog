@@ -3,6 +3,7 @@ import styles from './Ticker.module.scss';
 import WSConnector from '../../WSClient';
 import { useAppSelector } from '../../app/hooks';
 import { ClientMessageType } from '../../Enums';
+import { Order } from '../../Models/ClientMessages';
 
 interface TickerInstrument {
     id: number;
@@ -79,7 +80,7 @@ const Ticker: FC = () => {
         if (!instruments.find((i) => i.id === activeValue)?.subscribe) {
             return;
         }
-        const order = {
+        const order: Order = {
             orderId: orderId,
             creationTime: getCurrentDate(),
             side: type,

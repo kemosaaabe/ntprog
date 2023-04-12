@@ -1,7 +1,5 @@
 export enum ClientMessageType {
     initialConnect = 0,
-    subscribeMarketData,
-    unsubscribeMarketData,
     placeOrder,
     updateOrder,
 }
@@ -11,22 +9,4 @@ export enum ServerMessageType {
     error,
     executionReport,
     marketDataUpdate,
-}
-
-export enum OrderSide {
-    buy = 1,
-    sell,
-}
-
-export enum OrderStatus {
-    active = 1,
-    filled,
-    rejected,
-    cancelled,
-}
-
-export enum Instrument {
-    eur_usd = 1,
-    eur_rub,
-    usd_rub,
 }

@@ -22,17 +22,29 @@ def ws(sock):
 
         print(response)
 
-        if response['messageType'] == 3:
+        if response['messageType'] == 1:
             new_dict = {'messageType': 1, 
                         'message': {'status': 'Active', 'changeTime': datetime.now().strftime('%Y-%d-%m %H:%M:%S'), 
                                     **response['message']}}
             sock.send(json.dumps(new_dict))
 
-        if response['messageType'] == 4:
-            new_dict = {'messageType': 1, 
+            execution_report = {'messageType': 3, 'message': 'data added successfully'}
+            sock.send(json.dumps(execution_report))
+
+
+        if response['messageType'] == 2:
+            new_dict = {'messageType': 4, 
                         'message': {'status': statuses[response['message']['newStatus']], 'changeTime': datetime.now().strftime('%Y-%d-%m %H:%M:%S'), 
                                     **response['message']}}
             sock.send(json.dumps(new_dict))
+
+            if new_dict['message']['status'] == 'Rejected':
+                execution_report = {'messageType': 2, 'message': {'reason': 'an unknown error occurred'}}
+                sock.send(json.dumps(execution_report))
+
+            else: 
+                execution_report = {'messageType': 3, 'message': 'data updated successfully'}
+                sock.send(json.dumps(execution_report))
 
 
 if __name__ == '__main__':

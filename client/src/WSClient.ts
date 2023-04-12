@@ -1,7 +1,7 @@
 import { ClientMessage } from './Models/ClientMessages';
-import { ClientMessageType, Instrument } from './Enums';
 import { store } from './app/store';
 import { addOrder, updateOrder } from './features/ordersSlice';
+import { ServerMessageType } from './Enums';
 
 export default class WSConnector {
     connection: WebSocket | undefined;
@@ -14,10 +14,11 @@ export default class WSConnector {
         this.connection = new WebSocket('ws://127.0.0.1:5000/ws');
         this.connection.onclose = (e) => {
             this.connection = undefined;
-            console.log(e);
         };
 
-        this.connection.onerror = () => {};
+        this.connection.onerror = () => {
+            console.log('Error!!!');
+        };
 
         this.connection.onopen = () => {
             console.log('Соединение установлено');
@@ -32,76 +33,30 @@ export default class WSConnector {
         };
 
         this.connection.onmessage = (event) => {
-            // const message: ServerEnvelope = JSON.parse(event.data);
-            // console.log(event.data);
-            // switch (message.messageType) {
-            //     case ServerMessageType.success:
-            //         console.log(message);
-            //         break;
-            //     case ServerMessageType.error:
-            //         console.log(message);
-            //         break;
-            //     case ServerMessageType.executionReport:
-            //         console.log(message);
-            //         break;
-            //     case ServerMessageType.marketDataUpdate:
-            //         console.log(message);
-            //         break;
-            // }
             const message = JSON.parse(event.data);
-            const isExistingOrder = store
-                .getState()
-                .orders.orders.find(
-                    (order) => order.orderId === message.message.orderId
-                );
-            if (Boolean(isExistingOrder)) {
-                store.dispatch(updateOrder(message.message));
-            } else {
-                store.dispatch(addOrder(message.message));
+            switch (message.messageType) {
+                case ServerMessageType.success:
+                    store.dispatch(addOrder(message.message));
+                    break;
+                case ServerMessageType.error:
+                    console.log(message);
+                    break;
+                case ServerMessageType.executionReport:
+                    console.log(message);
+                    break;
+                case ServerMessageType.marketDataUpdate:
+                    store.dispatch(updateOrder(message.message));
+                    break;
             }
         };
     };
 
     disconnect = () => {
         this.connection?.close();
+        console.log('Соединенние прервано');
     };
 
     send = (message: ClientMessage) => {
         this.connection?.send(JSON.stringify(message));
     };
-
-    subscribeMarketData = (instrument: Instrument) => {
-        this.send({
-            messageType: ClientMessageType.subscribeMarketData,
-            message: {
-                instrument,
-            },
-        });
-    };
-
-    // unsubscribeMarketData = (subscriptionId: string) => {
-    //     this.send({
-    //         messageType: ClientMessageType.unsubscribeMarketData,
-    //         message: {
-    //             subscriptionId,
-    //         },
-    //     });
-    // };
-
-    // placeOrder = (
-    //     instrument: Instrument,
-    //     side: OrderSide,
-    //     amount: Decimal,
-    //     price: Decimal
-    // ) => {
-    //     this.send({
-    //         messageType: ClientMessageType.placeOrder,
-    //         message: {
-    //             instrument,
-    //             side,
-    //             amount,
-    //             price,
-    //         },
-    //     });
-    // };
 }
