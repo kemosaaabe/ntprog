@@ -39,7 +39,7 @@ def ws(sock):
             sock.send(json.dumps(new_dict))
 
             if new_dict['message']['status'] == 'Rejected':
-                execution_report = {'messageType': 2, 'message': {'reason': 'an unknown error occurred'}}
+                execution_report = {'messageType': 2, 'message': {'reason': 'your application has been rejected'}}
                 sock.send(json.dumps(execution_report))
 
             else: 
