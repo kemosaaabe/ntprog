@@ -1,14 +1,27 @@
 from flask import Flask
 from flask_sock import Sock
+from datetime import datetime
+import json
+
 
 app = Flask(__name__)
 sock = Sock(app)
 
-@sock.route('/echo')
-def echo(ws):
+
+@sock.route('/ws')
+def ws(sock):
     while True:
-        data = ws.receive()
-        ws.send(data[::-1])
+        data = sock.receive()
+        response = json.loads(data)
+
+        print(response)
+
+        if response['messageType'] == 3:
+            new_dict = {'messageType': 1, 'message': {'changeTime': datetime.now().strftime('%Y-%d-%m %H:%M:%S'), **response['message']}}
+            sock.send(json.dumps(new_dict))
+            
+            
+        
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,5 +1,6 @@
 export enum ClientMessageType {
-    subscribeMarketData = 1,
+    initialConnect = 0,
+    subscribeMarketData,
     unsubscribeMarketData,
     placeOrder,
 }
