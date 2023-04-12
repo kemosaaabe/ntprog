@@ -7,6 +7,8 @@ import {
 } from './Enums';
 import Decimal from 'decimal.js';
 import { ServerEnvelope } from './Models/ServerMessages';
+import { store } from './app/store';
+import { addOrder } from './features/ordersSlice';
 
 export default class WSConnector {
     connection: WebSocket | undefined;
@@ -54,8 +56,8 @@ export default class WSConnector {
             //         break;
             // }
             const message = JSON.parse(event.data);
-            // console.log(message.message.changeTime);
             console.log(message);
+            store.dispatch(addOrder(message.message));
         };
     };
 

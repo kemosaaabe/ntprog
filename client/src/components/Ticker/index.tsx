@@ -1,4 +1,7 @@
 import React, { FC } from 'react';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+// import { addInstrument } from '../../features/instrumentsSlice';
+// import { addOrder } from '../../features/ordersSlice';
 import styles from './Ticker.module.scss';
 import WSConnector from '../../WSClient';
 import { ClientMessageType } from '../../Enums';
@@ -45,6 +48,8 @@ const Ticker: FC = () => {
     const [sellPrice, setSellPrice] = React.useState<number>(prices[0]);
     const [buyPrice, setBuyPrice] = React.useState<number>(prices[0] + 0.12);
     const [connection] = React.useState<WSConnector>(new WSConnector());
+    const orders = useAppSelector((state) => state.orders.orders);
+    console.log(orders);
 
     React.useEffect(() => {
         connection.connect();
@@ -72,16 +77,18 @@ const Ticker: FC = () => {
     };
 
     const onBtnClick = (type: string, price: number) => {
+        const order = {
+            orderId: orderId,
+            creationTime: getCurrentDate(),
+            side: type,
+            instrument: activeValue,
+            amount: activeAmount,
+            price: price,
+        };
+
         connection.send({
             messageType: ClientMessageType.placeOrder,
-            message: {
-                orderId: orderId,
-                creationTime: getCurrentDate(),
-                side: type,
-                instrument: activeValue,
-                amount: activeAmount,
-                price: price,
-            },
+            message: order,
         });
 
         setOrderId((prev) => prev + 1);
