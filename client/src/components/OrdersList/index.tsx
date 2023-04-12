@@ -31,7 +31,7 @@ const OrdersList: FC = () => {
                 </thead>
                 <tbody>
                     {orders.map((order) => (
-                        <Order {...order} />
+                        <Order {...order} key={order.orderId} />
                     ))}
                 </tbody>
             </table>

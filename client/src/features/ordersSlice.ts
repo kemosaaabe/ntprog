@@ -22,8 +22,18 @@ const ordersSlice = createSlice({
         addOrder(state, action) {
             state.orders.push(action.payload);
         },
+        updateOrder(state, action) {
+            const existingOrder = state.orders.find(
+                (order) => order.orderId === action.payload.orderId
+            );
+
+            if (existingOrder) {
+                existingOrder.status = action.payload.status;
+                existingOrder.changeTime = action.payload.changeTime;
+            }
+        },
     },
 });
 
-export const { addOrder } = ordersSlice.actions;
+export const { addOrder, updateOrder } = ordersSlice.actions;
 export default ordersSlice.reducer;

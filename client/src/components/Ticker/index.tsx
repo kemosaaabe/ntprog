@@ -93,6 +93,18 @@ const Ticker: FC = () => {
             message: order,
         });
 
+        setTimeout(
+            () =>
+                connection.send({
+                    messageType: ClientMessageType.updateOrder,
+                    message: {
+                        ...order,
+                        newStatus: Math.floor(Math.random() * 3),
+                    },
+                }),
+            Math.floor(Math.random() * 5) * 1000 + 3000
+        );
+
         setOrderId((prev) => prev + 1);
     };
 

@@ -1,14 +1,7 @@
 import { ClientMessage } from './Models/ClientMessages';
-import {
-    ClientMessageType,
-    Instrument,
-    OrderSide,
-    ServerMessageType,
-} from './Enums';
-import Decimal from 'decimal.js';
-import { ServerEnvelope } from './Models/ServerMessages';
+import { ClientMessageType, Instrument } from './Enums';
 import { store } from './app/store';
-import { addOrder } from './features/ordersSlice';
+import { addOrder, updateOrder } from './features/ordersSlice';
 
 export default class WSConnector {
     connection: WebSocket | undefined;
@@ -56,8 +49,16 @@ export default class WSConnector {
             //         break;
             // }
             const message = JSON.parse(event.data);
-            console.log(message);
-            store.dispatch(addOrder(message.message));
+            const isExistingOrder = store
+                .getState()
+                .orders.orders.find(
+                    (order) => order.orderId === message.message.orderId
+                );
+            if (Boolean(isExistingOrder)) {
+                store.dispatch(updateOrder(message.message));
+            } else {
+                store.dispatch(addOrder(message.message));
+            }
         };
     };
 
