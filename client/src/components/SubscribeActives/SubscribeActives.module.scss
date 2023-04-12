@@ -1,0 +1,31 @@
+.subscribeActives {
+    width: 70%;
+    margin: 50px auto;
+
+    @media (min-width: 1920px) {
+        width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+.fieldsWrapper {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+
+    .fields {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        label {
+            font-size: 'Montserrat', sans-serif;
+            margin-left: 10px;
+        }
+
+        input {
+            width: 15px;
+            height: 15px;
+        }
+    }
+}

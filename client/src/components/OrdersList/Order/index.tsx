@@ -1,17 +1,38 @@
 import React, { FC } from 'react';
 import styles from './Order.module.scss';
+import { orderInterface } from '../../../features/ordersSlice';
+import { useAppSelector } from '../../../app/hooks';
 
-const Order: FC = () => {
+const Order: FC<orderInterface> = ({
+    orderId,
+    creationTime,
+    changeTime,
+    status,
+    side,
+    instrument,
+    amount,
+    price,
+}) => {
+    const instruments = useAppSelector(
+        (state) => state.instruments.instruments
+    );
+
     return (
         <tr>
-            <td>1</td>
-            <td>2022-01-01 12:00:31.31525</td>
-            <td>2022-01-01 12:00:31.31525</td>
-            <td>Active</td>
-            <td className={styles.buy}>Buy</td>
-            <td className={styles.buy}>8.559</td>
-            <td className={styles.buy}>500000.00</td>
-            <td>CNN/RUB</td>
+            <td>{orderId}</td>
+            <td>{creationTime}</td>
+            <td>{changeTime}</td>
+            <td>{status}</td>
+            <td className={side === 'Buy' ? styles.buy : styles.sell}>
+                {side}
+            </td>
+            <td className={side === 'Buy' ? styles.buy : styles.sell}>
+                {price}
+            </td>
+            <td className={side === 'Buy' ? styles.buy : styles.sell}>
+                {amount}
+            </td>
+            <td>{instruments.find((i) => i.id === instrument)?.name}</td>
         </tr>
     );
 };

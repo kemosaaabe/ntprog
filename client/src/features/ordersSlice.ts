@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface ordersAction {
+export interface orderInterface {
     orderId: number;
     creationTime: string;
+    changeTime: string;
     side: string;
     instrument: number;
     amount: number;
     price: number;
+    status: string;
 }
 
-const initialState: { orders: ordersAction[] } = {
+const initialState: { orders: orderInterface[] } = {
     orders: [],
 };
 

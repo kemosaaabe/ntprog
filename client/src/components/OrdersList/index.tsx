@@ -1,8 +1,18 @@
 import React, { FC } from 'react';
+import { useAppSelector } from '../../app/hooks';
 import Order from './Order';
 import styles from './OrderList.module.scss';
 
 const OrdersList: FC = () => {
+    const instruments = useAppSelector(
+        (state) => state.instruments.instruments
+    );
+    const orders = useAppSelector((state) =>
+        state.orders.orders.filter(
+            (order) =>
+                instruments.find((i) => i.id === order.instrument)?.subscribe
+        )
+    );
     return (
         <div className={styles.ordersList}>
             <h2>Orders List</h2>
@@ -20,8 +30,8 @@ const OrdersList: FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {[...new Array(10)].map((item, index) => (
-                        <Order key={index} />
+                    {orders.map((order) => (
+                        <Order {...order} />
                     ))}
                 </tbody>
             </table>

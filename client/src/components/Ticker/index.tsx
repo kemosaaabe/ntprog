@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-// import { addInstrument } from '../../features/instrumentsSlice';
-// import { addOrder } from '../../features/ordersSlice';
 import styles from './Ticker.module.scss';
 import WSConnector from '../../WSClient';
+import { useAppSelector } from '../../app/hooks';
 import { ClientMessageType } from '../../Enums';
 
 interface TickerInstrument {
@@ -48,8 +46,9 @@ const Ticker: FC = () => {
     const [sellPrice, setSellPrice] = React.useState<number>(prices[0]);
     const [buyPrice, setBuyPrice] = React.useState<number>(prices[0] + 0.12);
     const [connection] = React.useState<WSConnector>(new WSConnector());
-    const orders = useAppSelector((state) => state.orders.orders);
-    console.log(orders);
+    const instruments = useAppSelector(
+        (state) => state.instruments.instruments
+    );
 
     React.useEffect(() => {
         connection.connect();
@@ -77,6 +76,9 @@ const Ticker: FC = () => {
     };
 
     const onBtnClick = (type: string, price: number) => {
+        if (!instruments.find((i) => i.id === activeValue)?.subscribe) {
+            return;
+        }
         const order = {
             orderId: orderId,
             creationTime: getCurrentDate(),

@@ -17,7 +17,9 @@ def ws(sock):
         print(response)
 
         if response['messageType'] == 3:
-            new_dict = {'messageType': 1, 'message': {'changeTime': datetime.now().strftime('%Y-%d-%m %H:%M:%S'), **response['message']}}
+            new_dict = {'messageType': 1, 
+                        'message': {'status': 'Active', 'changeTime': datetime.now().strftime('%Y-%d-%m %H:%M:%S'), 
+                                    **response['message']}}
             sock.send(json.dumps(new_dict))
             
             
